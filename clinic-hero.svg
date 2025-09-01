@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="wallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="floorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1f5f9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cbd5e1;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="lightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#f0f9ff;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Background -->
+  <rect width="1920" height="1080" fill="url(#wallGradient)"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="800" width="1920" height="280" fill="url(#floorGradient)"/>
+  
+  <!-- Windows with natural light -->
+  <rect x="100" y="100" width="300" height="400" fill="#ffffff" opacity="0.8" rx="20"/>
+  <rect x="110" y="110" width="280" height="380" fill="url(#lightGradient)" rx="15"/>
+  
+  <rect x="500" y="100" width="300" height="400" fill="#ffffff" opacity="0.8" rx="20"/>
+  <rect x="510" y="110" width="280" height="380" fill="url(#lightGradient)" rx="15"/>
+  
+  <!-- Reception Area -->
+  <!-- Reception Desk -->
+  <rect x="1200" y="600" width="400" height="180" fill="#2563eb" rx="10"/>
+  <rect x="1210" y="590" width="380" height="20" fill="#1d4ed8" rx="10"/>
+  
+  <!-- Reception Computer -->
+  <rect x="1300" y="520" width="60" height="40" fill="#334155" rx="5"/>
+  <rect x="1305" y="525" width="50" height="30" fill="#3b82f6" rx="3"/>
+  
+  <!-- Reception Chair -->
+  <ellipse cx="1400" cy="550" rx="30" ry="15" fill="#16a34a"/>
+  <rect x="1390" y="535" width="20" height="40" fill="#15803d" rx="10"/>
+  
+  <!-- Waiting Area Chairs -->
+  <rect x="200" y="650" width="80" height="80" fill="#22c55e" rx="10"/>
+  <rect x="200" y="630" width="80" height="20" fill="#16a34a" rx="10"/>
+  
+  <rect x="320" y="650" width="80" height="80" fill="#22c55e" rx="10"/>
+  <rect x="320" y="630" width="80" height="20" fill="#16a34a" rx="10"/>
+  
+  <rect x="440" y="650" width="80" height="80" fill="#22c55e" rx="10"/>
+  <rect x="440" y="630" width="80" height="20" fill="#16a34a" rx="10"/>
+  
+  <!-- Coffee Table -->
+  <rect x="300" y="750" width="120" height="60" fill="#8b5cf6" rx="8"/>
+  <rect x="310" y="730" width="100" height="10" fill="#7c3aed" rx="5"/>
+  
+  <!-- Medical Equipment -->
+  <!-- Blood Pressure Monitor -->
+  <rect x="800" y="500" width="60" height="80" fill="#64748b" rx="5"/>
+  <rect x="805" y="505" width="50" height="30" fill="#1e293b" rx="3"/>
+  <circle cx="830" cy="550" r="8" fill="#ef4444"/>
+  
+  <!-- IV Stand -->
+  <rect x="900" y="400" width="8" height="350" fill="#475569"/>
+  <circle cx="904" cy="410" r="15" fill="#64748b"/>
+  <rect x="890" y="395" width="28" height="8" fill="#64748b" rx="4"/>
+  
+  <!-- Medical Cabinet -->
+  <rect x="1500" y="200" width="200" height="300" fill="#ffffff" rx="10"/>
+  <rect x="1505" y="205" width="190" height="290" fill="#f8fafc" rx="8"/>
+  <rect x="1520" y="220" width="160" height="8" fill="#e2e8f0"/>
+  <rect x="1520" y="240" width="160" height="8" fill="#e2e8f0"/>
+  <rect x="1520" y="260" width="160" height="8" fill="#e2e8f0"/>
+  
+  <!-- Plant for ambiance -->
+  <ellipse cx="150" cy="780" rx="40" ry="20" fill="#166534"/>
+  <rect x="140" y="770" width="20" height="40" fill="#15803d"/>
+  <ellipse cx="150" cy="750" rx="30" ry="40" fill="#22c55e"/>
+  
+  <!-- Another plant -->
+  <ellipse cx="1800" cy="780" rx="35" ry="18" fill="#166534"/>
+  <rect x="1792" y="775" width="16" height="35" fill="#15803d"/>
+  <ellipse cx="1800" cy="755" rx="25" ry="35" fill="#22c55e"/>
+  
+  <!-- Wall-mounted medical information screens -->
+  <rect x="600" y="200" width="200" height="120" fill="#1e293b" rx="10"/>
+  <rect x="610" y="210" width="180" height="100" fill="#3b82f6" rx="5"/>
+  
+  <rect x="900" y="200" width="200" height="120" fill="#1e293b" rx="10"/>
+  <rect x="910" y="210" width="180" height="100" fill="#3b82f6" rx="5"/>
+  
+  <!-- Medical cross symbols -->
+  <g fill="#ef4444">
+    <rect x="1570" y="150" width="8" height="30" rx="2"/>
+    <rect x="1562" y="158" width="24" height="8" rx="2"/>
+  </g>
+  
+  <g fill="#ef4444">
+    <rect x="680" y="150" width="8" height="30" rx="2"/>
+    <rect x="672" y="158" width="24" height="8" rx="2"/>
+  </g>
+  
+  <!-- Ceiling lights -->
+  <ellipse cx="400" cy="50" rx="60" ry="20" fill="#ffffff" opacity="0.8"/>
+  <ellipse cx="400" cy="45" rx="50" ry="15" fill="#f0f9ff"/>
+  
+  <ellipse cx="800" cy="50" rx="60" ry="20" fill="#ffffff" opacity="0.8"/>
+  <ellipse cx="800" cy="45" rx="50" ry="15" fill="#f0f9ff"/>
+  
+  <ellipse cx="1200" cy="50" rx="60" ry="20" fill="#ffffff" opacity="0.8"/>
+  <ellipse cx="1200" cy="45" rx="50" ry="15" fill="#f0f9ff"/>
+  
+  <ellipse cx="1600" cy="50" rx="60" ry="20" fill="#ffffff" opacity="0.8"/>
+  <ellipse cx="1600" cy="45" rx="50" ry="15" fill="#f0f9ff"/>
+  
+  <!-- Hand sanitizer stations -->
+  <rect x="50" y="600" width="30" height="80" fill="#64748b" rx="5"/>
+  <rect x="55" y="605" width="20" height="15" fill="#22c55e" rx="3"/>
+  
+  <rect x="1850" y="600" width="30" height="80" fill="#64748b" rx="5"/>
+  <rect x="1855" y="605" width="20" height="15" fill="#22c55e" rx="3"/>
+  
+  <!-- Subtle shadows and lighting effects -->
+  <ellipse cx="400" cy="850" rx="100" ry="20" fill="#94a3b8" opacity="0.3"/>
+  <ellipse cx="800" cy="850" rx="80" ry="15" fill="#94a3b8" opacity="0.3"/>
+  <ellipse cx="1400" cy="850" rx="120" ry="25" fill="#94a3b8" opacity="0.3"/>
+  
+  <!-- Light rays from windows -->
+  <polygon points="250,500 350,800 150,800" fill="#ffffff" opacity="0.1"/>
+  <polygon points="650,500 750,800 550,800" fill="#ffffff" opacity="0.1"/>
+</svg>

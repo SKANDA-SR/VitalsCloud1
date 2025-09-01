@@ -1,0 +1,358 @@
+@page "/appointments"
+@using BlazorApp2.Models
+@using BlazorApp2.Services
+@inject ClinicService ClinicService
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<PageTitle>Book Appointment - VitalsCloud</PageTitle>
+
+<div class="appointment-hero">
+    <div class="container">
+        <h1><i class="fas fa-calendar-plus"></i> Book Your Appointment</h1>
+        <p>Schedule your visit with our experienced medical professionals</p>
+    </div>
+</div>
+
+<div class="appointment-container">
+    
+    <div class="appointment-form-card">
+        <div class="form-header">
+            <h2>Patient Information</h2>
+            <p>Please fill in your details to book an appointment</p>
+        </div>
+        
+        <EditForm Model="@newPatientForm" OnValidSubmit="HandleAppointmentBooking" FormName="AppointmentForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            
+            <div class="form-section">
+                <h4><i class="fas fa-user"></i> Personal Details</h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <InputText @bind-Value="newPatientForm.Name" class="form-control" placeholder="Enter your full name" />
+                        <ValidationMessage For="@(() => newPatientForm.Name)" />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <InputText @bind-Value="newPatientForm.Contact" class="form-control" placeholder="Enter your phone number" />
+                        <ValidationMessage For="@(() => newPatientForm.Contact)" />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth</label>
+                        <InputDate @bind-Value="newPatientForm.DateOfBirth" class="form-control" />
+                        <ValidationMessage For="@(() => newPatientForm.DateOfBirth)" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4><i class="fas fa-stethoscope"></i> Appointment Details</h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Service Required</label>
+                        <InputSelect @bind-Value="appointmentForm.Service" class="form-select">
+                            <option value="">-- Select Service --</option>
+                            <option value="General Medicine">General Medicine</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Emergency Care">Emergency Care</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => appointmentForm.Service)" />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Preferred Doctor</label>
+                        <InputSelect @bind-Value="appointmentForm.DoctorName" class="form-select">
+                            <option value="">-- Select Doctor --</option>
+                            <option value="Dr. Sarah Johnson">Dr. Sarah Johnson (General Medicine)</option>
+                            <option value="Dr. Michael Chen">Dr. Michael Chen (Pediatrics)</option>
+                            <option value="Dr. Emily Rodriguez">Dr. Emily Rodriguez (Emergency Care)</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => appointmentForm.DoctorName)" />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Preferred Date</label>
+                        <InputDate @bind-Value="appointmentForm.AppointmentDate" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <ValidationMessage For="@(() => appointmentForm.AppointmentDate)" />
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Preferred Time</label>
+                        <InputSelect @bind-Value="appointmentForm.TimeSlot" class="form-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => appointmentForm.TimeSlot)" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-book-appointment" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Booking Appointment...</span>
+                    }
+                    else
+                    {
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Book Appointment</span>
+                    }
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+.appointment-hero {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3d72 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.appointment-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.appointment-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.appointment-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.appointment-form-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.form-header {
+    background: #f8fafc;
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.form-header h2 {
+    color: #2c5aa0;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.form-section {
+    padding: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h4 {
+    color: #374151;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section h4 i {
+    color: #059669;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2c5aa0;
+    box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+}
+
+.form-actions {
+    padding: 2rem;
+    text-align: center;
+    background: #f8fafc;
+}
+
+.btn-book-appointment {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-book-appointment:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+    color: white;
+}
+
+.btn-book-appointment:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.validation-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Media queries moved to custom.css */
+</style>
+
+@code {
+    [Inject]
+    private ILoggerFactory LoggerFactory { get; set; } = null!;
+    private ILogger? logger;
+    
+    // Form models for new booking system
+    private Patient newPatientForm = new() { DateOfBirth = DateTime.Today.AddYears(-30) };
+    private AppointmentBookingForm appointmentForm = new() { AppointmentDate = DateTime.Today.AddDays(1) };
+    
+    private bool isSubmitting = false;
+
+    protected override void OnInitialized()
+    {
+        logger = LoggerFactory.CreateLogger<Appointments>();
+    }
+
+    private async Task HandleAppointmentBooking()
+    {
+        isSubmitting = true;
+
+        try
+        {
+            // First, create or find the patient
+            var existingPatients = await ClinicService.GetPatientsAsync();
+            var existingPatient = existingPatients.FirstOrDefault(p => 
+                p.Name.Equals(newPatientForm.Name, StringComparison.OrdinalIgnoreCase) && 
+                p.Contact == newPatientForm.Contact);
+
+            Patient patient;
+            if (existingPatient != null)
+            {
+                patient = existingPatient;
+            }
+            else
+            {
+                await ClinicService.AddPatientAsync(newPatientForm);
+                var patients = await ClinicService.GetPatientsAsync();
+                patient = patients.Last(); // Get the newly added patient
+            }
+
+            // Parse the selected time and combine with date
+            var appointmentDateTime = appointmentForm.AppointmentDate;
+            if (!string.IsNullOrEmpty(appointmentForm.TimeSlot))
+            {
+                var timeParts = appointmentForm.TimeSlot.Split(':');
+                if (timeParts.Length == 2 && int.TryParse(timeParts[0], out int hour) && int.TryParse(timeParts[1], out int minute))
+                {
+                    appointmentDateTime = appointmentForm.AppointmentDate.Date.AddHours(hour).AddMinutes(minute);
+                }
+            }
+
+            // Create the appointment
+            var appointment = new Appointment
+            {
+                PatientId = patient.Id,
+                Service = appointmentForm.Service,
+                DoctorName = appointmentForm.DoctorName,
+                AppointmentDate = appointmentDateTime
+            };
+
+            await ClinicService.AddAppointmentAsync(appointment);
+
+            // Show success message using JavaScript alert
+            await JSRuntime.InvokeVoidAsync("alert", 
+                $"Appointment booked successfully!\n\n" +
+                $"Patient: {newPatientForm.Name}\n" +
+                $"Service: {appointmentForm.Service}\n" +
+                $"Doctor: {appointmentForm.DoctorName}\n" +
+                $"Date: {appointmentDateTime:dddd, MMMM dd, yyyy}\n" +
+                $"Time: {appointmentDateTime:h:mm tt}\n\n" +
+                $"We will contact you at {newPatientForm.Contact} to confirm your appointment.");
+
+            // Reset forms
+            newPatientForm = new() { DateOfBirth = DateTime.Today.AddYears(-30) };
+            appointmentForm = new() { AppointmentDate = DateTime.Today.AddDays(1) };
+        }
+        catch (Exception ex)
+        {
+            logger?.LogError(ex, "Error booking appointment");
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while booking your appointment. Please try again or contact us directly.");
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    // Form model for appointment booking
+    public class AppointmentBookingForm
+    {
+        [Required(ErrorMessage = "Service is required")]
+        public string Service { get; set; } = "";
+        
+        [Required(ErrorMessage = "Doctor selection is required")]
+        public string DoctorName { get; set; } = "";
+        
+        [Required(ErrorMessage = "Appointment date is required")]
+        public DateTime AppointmentDate { get; set; } = DateTime.Today.AddDays(1);
+        
+        [Required(ErrorMessage = "Time slot is required")]
+        public string TimeSlot { get; set; } = "";
+    }
+}

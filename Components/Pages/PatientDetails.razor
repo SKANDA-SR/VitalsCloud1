@@ -1,0 +1,46 @@
+@page "/patient-details/{PatientId:int}"
+@using BlazorApp2.Models
+@using BlazorApp2.Services
+
+@inject ClinicService ClinicService
+@inject IJSRuntime JSRuntime
+
+@if (patient is null)
+{
+<p><em>Loading patient...</em></p>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="d-print-none mb-4">
+             <button class="btn btn-primary" @onclick="PrintPage"><i class="bi bi-printer-fill"></i> Print Details</button>
+             <a href="/patients" class="btn btn-secondary">Back to List</a>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white"><h2>Patient Record</h2></div>
+            <div class="card-body fs-5">
+                <p><strong>Patient ID:</strong> @patient.Id</p>
+                <p><strong>Name:</strong> @patient.Name</p>
+                <p><strong>Contact:</strong> @patient.Contact</p>
+                <p><strong>Date of Birth:</strong> @patient.DateOfBirth.ToShortDateString()</p>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    private Patient? patient;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patient = await ClinicService.GetPatientByIdAsync(PatientId);
+    }
+
+    private async Task PrintPage()
+    {
+        await JSRuntime.InvokeVoidAsync("window.print");
+    }
+}

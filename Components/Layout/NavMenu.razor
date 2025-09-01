@@ -1,0 +1,137 @@
+@* Components/Layout/NavMenu.razor *@
+@using Microsoft.AspNetCore.Components.Authorization
+@using BlazorApp2.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+<link href="~/css/custom.css" rel="stylesheet" />
+
+<nav class="navbar navbar-expand-lg navbar-modern">
+    <div class="container-fluid">
+        <a class="navbar-brand-modern" href="">VitalsCloud</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Sign In Button (Left Side) -->
+            <div class="navbar-nav me-auto">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <a class="nav-link signin-link" href="login">
+                                <i class="fas fa-sign-in-alt"></i> Doctor Sign In
+                            </a>
+                        </li>
+                    </NotAuthorized>
+                    <Authorized>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle doctor-menu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-md"></i> Dr. @context.User.Identity?.Name
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="doctor-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" @onclick="HandleLogout" href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                            </ul>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+
+            <!-- Main Navigation (Center) -->
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <NavLink class="nav-link-modern" href="" Match="NavLinkMatch.All">Home</NavLink>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-modern" href="#services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-modern" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-modern" href="#team">Team</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-modern" href="#contact">Contact</a>
+                </li>
+                <AuthorizeView Roles="Doctor">
+                    <li class="nav-item">
+                        <NavLink class="nav-link-modern" href="patients">Patients</NavLink>
+                    </li>
+                </AuthorizeView>
+                <li class="nav-item">
+                    <NavLink class="nav-link-modern" href="appointments">Book Appointment</NavLink>
+                </li>
+            </ul>
+
+            <!-- Book Appointment Button (Right Side) -->
+            <div class="d-flex">
+                <a href="appointments" class="btn-cta">Book Appointment</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+.signin-link {
+    color: #2c5aa0 !important;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.signin-link:hover {
+    background: rgba(44, 90, 160, 0.1);
+    color: #1e3d72 !important;
+}
+
+.doctor-menu {
+    color: #059669 !important;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: rgba(5, 150, 105, 0.1);
+}
+
+.doctor-menu:hover {
+    background: rgba(5, 150, 105, 0.2);
+    color: #047857 !important;
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.dropdown-item {
+    padding: 0.7rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f8fafc;
+    color: #2c5aa0;
+}
+
+.dropdown-item i {
+    width: 20px;
+    margin-right: 0.5rem;
+    color: #64748b;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+}
+
+/* Media queries moved to custom.css */
+</style>
+
+@code {
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/");
+    }
+}

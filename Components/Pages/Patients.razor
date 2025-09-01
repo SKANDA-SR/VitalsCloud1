@@ -1,0 +1,183 @@
+@page "/patients"
+@using BlazorApp2.Models
+@using BlazorApp2.Services
+@inject ClinicService ClinicService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert @(isError ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+        @message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">Add New Patient</div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Patient Name</label>
+                <input @bind="patientName" class="form-control" placeholder="Enter patient name" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Contact Number</label>
+                <input @bind="patientContact" class="form-control" placeholder="Enter contact number" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Date of Birth</label>
+                <input @bind="patientDob" type="date" class="form-control" />
+            </div>
+        </div>
+        <button @onclick="HandleAddPatient" class="btn btn-primary mt-3" disabled="@isSubmitting">
+            @if (isSubmitting)
+            {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <text> Adding...</text>
+            }
+            else
+            {
+                <text>Add Patient</text>
+            }
+        </button>
+    </div>
+</div>
+
+<h4><i class="bi bi-list-ul"></i> Patient List</h4>
+@if (patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in patients)
+                {
+                    <tr>
+                        <td>@patient.Name</td>
+                        <td>@patient.Contact</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" @onclick="() => ViewPatientDetails(patient.Id)">Print/View</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Patient>? patients;
+    private string? message;
+    private bool isError;
+    private bool isSubmitting;
+    
+    // Form fields
+    private string patientName = "";
+    private string patientContact = "";
+    private DateTime patientDob = DateTime.Today.AddYears(-30);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPatients();
+    }
+
+    private async Task LoadPatients()
+    {
+        try
+        {
+            patients = await ClinicService.GetPatientsAsync();
+        }
+        catch (Exception ex)
+        {
+            SetMessage($"Error loading patients: {ex.Message}", true);
+        }
+    }
+
+    private async Task HandleAddPatient()
+    {
+        if (isSubmitting) return;
+        
+        // Validate required fields
+        if (string.IsNullOrWhiteSpace(patientName))
+        {
+            SetMessage("Patient name is required.", true);
+            return;
+        }
+        
+        if (string.IsNullOrWhiteSpace(patientContact))
+        {
+            SetMessage("Contact information is required.", true);
+            return;
+        }
+        
+        isSubmitting = true;
+        ClearMessage();
+        
+        try
+        {
+            var newPatient = new Patient
+            {
+                Name = patientName.Trim(),
+                Contact = patientContact.Trim(),
+                DateOfBirth = patientDob
+            };
+            
+            Console.WriteLine($"Adding patient: Name={newPatient.Name}, Contact={newPatient.Contact}, DOB={newPatient.DateOfBirth}");
+            
+            await ClinicService.AddPatientAsync(newPatient);
+            
+            SetMessage($"Patient '{newPatient.Name}' added successfully!", false);
+            
+            // Reset form
+            patientName = "";
+            patientContact = "";
+            patientDob = DateTime.Today.AddYears(-30);
+            
+            await LoadPatients(); // Refresh list
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding patient: {ex.Message}");
+            SetMessage($"Error adding patient: {ex.Message}", true);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void SetMessage(string msg, bool error)
+    {
+        message = msg;
+        isError = error;
+        
+        // Auto-hide message after 5 seconds
+        _ = Task.Delay(5000).ContinueWith(t =>
+        {
+            message = null;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+    
+    private void ClearMessage()
+    {
+        message = null;
+        isError = false;
+    }
+
+    private void ViewPatientDetails(int patientId)
+    {
+        NavigationManager.NavigateTo($"/patient-details/{patientId}");
+    }
+}
