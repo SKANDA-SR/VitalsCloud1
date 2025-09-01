@@ -37,27 +37,50 @@ namespace BlazorApp2.Services
 
         public async Task<bool> LoginAsync(string userName, string password)
         {
-            // Hardcoded doctor credentials for demo
-            var doctors = new Dictionary<string, string>
+            try
             {
-                { "dr.smith", "password123" },
-                { "dr.johnson", "password123" },
-                { "dr.williams", "password123" },
-                { "admin", "admin123" }
-            };
-
-            if (doctors.ContainsKey(userName.ToLower()) && doctors[userName.ToLower()] == password)
-            {
-                var userSession = new UserSession
+                // Hardcoded doctor credentials for demo
+                var doctors = new Dictionary<string, string>
                 {
-                    UserName = userName,
-                    Role = "Doctor"
+                    { "dr.smith", "password123" },
+                    { "dr.johnson", "password123" },
+                    { "dr.williams", "password123" },
+                    { "admin", "admin123" }
                 };
-                await _sessionStorage.SetAsync("UserSession", userSession);
-                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-                return true;
+
+                // Log login attempt (remove in production)
+                Console.WriteLine($"Login attempt - Username: {userName}, Password length: {password?.Length ?? 0}");
+
+                if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+                {
+                    Console.WriteLine("Login failed: Empty username or password");
+                    return false;
+                }
+
+                var normalizedUsername = userName.ToLower().Trim();
+                if (doctors.ContainsKey(normalizedUsername) && doctors[normalizedUsername] == password)
+                {
+                    var userSession = new UserSession
+                    {
+                        UserName = userName,
+                        Role = "Doctor"
+                    };
+                    
+                    await _sessionStorage.SetAsync("UserSession", userSession);
+                    NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+                    
+                    Console.WriteLine($"Login successful for: {userName}");
+                    return true;
+                }
+                
+                Console.WriteLine($"Login failed: Invalid credentials for {userName}");
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task LogoutAsync()
