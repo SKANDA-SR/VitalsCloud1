@@ -1,6 +1,7 @@
 // Add these 'using' statements for the database context
 using Microsoft.EntityFrameworkCore;
 using BlazorApp2.Data; 
+using BlazorApp2.Models;
 
 // Your existing 'using' statements
 using BlazorApp2.Components;
