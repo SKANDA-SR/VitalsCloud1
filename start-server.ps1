@@ -1,6 +1,3 @@
-# Simple PowerShell Web Server for MediCare Plus Website
-# Run this script to start a local web server
-
 $port = 8080
 $url = "http://localhost:$port"
 
